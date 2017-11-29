@@ -1,0 +1,15 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: im-report-monitor-test
+  namespace: im-test
+spec:
+  rules:
+  - host: im-monitor-test.icsoc.net
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: im-report-monitor
+          servicePort: 5999
+

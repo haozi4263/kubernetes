@@ -1,0 +1,342 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"labels":{"k8s-app":"default-http-backend"},"name":"default-http-backend","namespace":"kube-system"},"spec":{"ports":[{"port":80,"targetPort":8080}],"selector":{"k8s-app":"default-http-backend"}}}
+    creationTimestamp: 2017-10-13T08:20:41Z
+    labels:
+      k8s-app: default-http-backend
+    name: default-http-backend
+    namespace: kube-system
+    resourceVersion: "256"
+    selfLink: /api/v1/namespaces/kube-system/services/default-http-backend
+    uid: 669128fb-afef-11e7-aaab-00163e0a4158
+  spec:
+    clusterIP: 172.19.14.110
+    ports:
+    - port: 80
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      k8s-app: default-http-backend
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    creationTimestamp: 2017-10-16T08:06:14Z
+    labels:
+      addonmanager.kubernetes.io/mode: Reconcile
+      k8s-app: fluent-bit-logging
+      kubernetes.io/cluster-service: "true"
+      kubernetes.io/name: Fluentbit
+    name: fluentbit-logging
+    namespace: kube-system
+    resourceVersion: "557536"
+    selfLink: /api/v1/namespaces/kube-system/services/fluentbit-logging
+    uid: e192a581-b248-11e7-aaab-00163e0a4158
+  spec:
+    clusterIP: 172.19.11.47
+    ports:
+    - port: 24224
+      protocol: TCP
+      targetPort: 24224
+    selector:
+      k8s-app: fluent-bit-logging
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    creationTimestamp: 2017-10-19T02:14:21Z
+    labels:
+      app: grafana
+    name: grafana
+    namespace: kube-system
+    resourceVersion: "1079350"
+    selfLink: /api/v1/namespaces/kube-system/services/grafana
+    uid: 385067b1-b473-11e7-aaab-00163e0a4158
+  spec:
+    clusterIP: 172.19.9.143
+    externalTrafficPolicy: Cluster
+    ports:
+    - name: web
+      nodePort: 30009
+      port: 3000
+      protocol: TCP
+      targetPort: 3000
+    selector:
+      app: grafana
+    sessionAffinity: None
+    type: NodePort
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"labels":{"kubernetes.io/cluster-service":"true","kubernetes.io/name":"Heapster","task":"monitoring"},"name":"heapster","namespace":"kube-system"},"spec":{"ports":[{"port":80,"targetPort":8082}],"selector":{"k8s-app":"heapster"}}}
+    creationTimestamp: 2017-10-13T08:20:42Z
+    labels:
+      kubernetes.io/cluster-service: "true"
+      kubernetes.io/name: Heapster
+      task: monitoring
+    name: heapster
+    namespace: kube-system
+    resourceVersion: "295"
+    selfLink: /api/v1/namespaces/kube-system/services/heapster
+    uid: 6749f35e-afef-11e7-aaab-00163e0a4158
+  spec:
+    clusterIP: 172.19.1.105
+    ports:
+    - port: 80
+      protocol: TCP
+      targetPort: 8082
+    selector:
+      k8s-app: heapster
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    creationTimestamp: 2017-10-19T03:06:49Z
+    labels:
+      addonmanager.kubernetes.io/mode: Reconcile
+      k8s-app: kibana-logging
+      kubernetes.io/cluster-service: "true"
+      kubernetes.io/name: Kibana
+    name: kibana-logging
+    namespace: kube-system
+    resourceVersion: "1087496"
+    selfLink: /api/v1/namespaces/kube-system/services/kibana-logging
+    uid: 8c853e5f-b47a-11e7-aaab-00163e0a4158
+  spec:
+    clusterIP: 172.19.2.168
+    ports:
+    - port: 5601
+      protocol: TCP
+      targetPort: ui
+    selector:
+      k8s-app: kibana-logging
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    creationTimestamp: 2017-10-13T08:20:39Z
+    labels:
+      k8s-app: kube-dns
+      kubernetes.io/cluster-service: "true"
+      kubernetes.io/name: KubeDNS
+    name: kube-dns
+    namespace: kube-system
+    resourceVersion: "185"
+    selfLink: /api/v1/namespaces/kube-system/services/kube-dns
+    uid: 65619e0e-afef-11e7-aaab-00163e0a4158
+  spec:
+    clusterIP: 172.19.0.10
+    ports:
+    - name: dns
+      port: 53
+      protocol: UDP
+      targetPort: 53
+    - name: dns-tcp
+      port: 53
+      protocol: TCP
+      targetPort: 53
+    selector:
+      k8s-app: kube-dns
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      prometheus.io/scrape: "true"
+    creationTimestamp: 2017-10-20T04:21:25Z
+    labels:
+      app: kube-state-metrics
+    name: kube-state-metrics
+    namespace: kube-system
+    resourceVersion: "1298185"
+    selfLink: /api/v1/namespaces/kube-system/services/kube-state-metrics
+    uid: 22b5801d-b54e-11e7-aaab-00163e0a4158
+  spec:
+    clusterIP: 172.19.15.180
+    ports:
+    - name: kube-state-metrics
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      app: kube-state-metrics
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    creationTimestamp: 2017-10-13T08:56:38Z
+    labels:
+      addonmanager.kubernetes.io/mode: Reconcile
+      k8s-app: kubernetes-dashboard
+      kubernetes.io/cluster-service: "true"
+    name: kubernetes-dashboard
+    namespace: kube-system
+    resourceVersion: "6236"
+    selfLink: /api/v1/namespaces/kube-system/services/kubernetes-dashboard
+    uid: 6c627d4b-aff4-11e7-aaab-00163e0a4158
+  spec:
+    clusterIP: 172.19.5.156
+    ports:
+    - port: 80
+      protocol: TCP
+      targetPort: 9090
+    selector:
+      k8s-app: kubernetes-dashboard
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"labels":{"kubernetes.io/cluster-service":"true","kubernetes.io/name":"monitoring-influxdb","task":"monitoring"},"name":"monitoring-influxdb","namespace":"kube-system"},"spec":{"ports":[{"port":8086,"targetPort":8086}],"selector":{"k8s-app":"influxdb"}}}
+    creationTimestamp: 2017-10-13T08:20:42Z
+    labels:
+      kubernetes.io/cluster-service: "true"
+      kubernetes.io/name: monitoring-influxdb
+      task: monitoring
+    name: monitoring-influxdb
+    namespace: kube-system
+    resourceVersion: "292"
+    selfLink: /api/v1/namespaces/kube-system/services/monitoring-influxdb
+    uid: 673b0738-afef-11e7-aaab-00163e0a4158
+  spec:
+    clusterIP: 172.19.0.18
+    ports:
+    - port: 8086
+      protocol: TCP
+      targetPort: 8086
+    selector:
+      k8s-app: influxdb
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{"service.beta.kubernetes.io/alicloud-loadbalancer-Bandwidth":"60"},"labels":{"app":"nginx-ingress-lb"},"name":"nginx-ingress-lb","namespace":"kube-system"},"spec":{"ports":[{"name":"http","port":80,"targetPort":80},{"name":"https","port":443,"targetPort":442}],"selector":{"k8s-app":"nginx-ingress-controller"},"type":"LoadBalancer"}}
+      service.beta.kubernetes.io/alicloud-loadbalancer-Bandwidth: "60"
+    creationTimestamp: 2017-10-13T08:20:40Z
+    labels:
+      app: nginx-ingress-lb
+    name: nginx-ingress-lb
+    namespace: kube-system
+    resourceVersion: "712"
+    selfLink: /api/v1/namespaces/kube-system/services/nginx-ingress-lb
+    uid: 6680928b-afef-11e7-aaab-00163e0a4158
+  spec:
+    clusterIP: 172.19.5.118
+    externalTrafficPolicy: Cluster
+    ports:
+    - name: http
+      nodePort: 31752
+      port: 80
+      protocol: TCP
+      targetPort: 80
+    - name: https
+      nodePort: 30907
+      port: 443
+      protocol: TCP
+      targetPort: 442
+    selector:
+      k8s-app: nginx-ingress-controller
+    sessionAffinity: None
+    type: LoadBalancer
+  status:
+    loadBalancer:
+      ingress:
+      - ip: 47.95.47.46
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      prometheus.io/scrape: "true"
+    creationTimestamp: 2017-10-20T04:21:25Z
+    labels:
+      app: prometheus
+      component: core
+    name: prometheus
+    namespace: kube-system
+    resourceVersion: "1298170"
+    selfLink: /api/v1/namespaces/kube-system/services/prometheus
+    uid: 22a3a7e2-b54e-11e7-aaab-00163e0a4158
+  spec:
+    clusterIP: 172.19.10.170
+    externalTrafficPolicy: Cluster
+    ports:
+    - name: webui
+      nodePort: 30900
+      port: 9090
+      protocol: TCP
+      targetPort: 9090
+    selector:
+      app: prometheus
+      component: core
+    sessionAffinity: None
+    type: NodePort
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      prometheus.io/scrape: "true"
+    creationTimestamp: 2017-10-20T04:21:24Z
+    labels:
+      app: prometheus
+      component: node-exporter
+    name: prometheus-node-exporter
+    namespace: kube-system
+    resourceVersion: "1298125"
+    selfLink: /api/v1/namespaces/kube-system/services/prometheus-node-exporter
+    uid: 226cc344-b54e-11e7-aaab-00163e0a4158
+  spec:
+    clusterIP: None
+    ports:
+    - name: prometheus-node-exporter
+      port: 9100
+      protocol: TCP
+      targetPort: 9100
+    selector:
+      app: prometheus
+      component: node-exporter
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+kind: List
+metadata: {}
+resourceVersion: ""
+selfLink: ""

@@ -1,0 +1,199 @@
+################################################################
+# Global configuration
+################################################################
+
+# Enable debug mode
+#
+# Optional
+# Default: false
+#
+# debug = true
+
+# Traefik logs file
+# If not defined, logs to stdout
+#
+# Optional
+#
+# traefikLogsFile = "log/traefik.log"
+
+# Log level
+#
+# Optional
+#Default: "info"
+#
+logLevel = "info"
+
+# Entrypoints to be used by frontends that do not specify any entrypoint.
+# Each frontend can specify its own entrypoints.
+#
+# Optional
+# Default: ["http"]
+#
+#defaultEntryPoints = ["http", "https"]
+
+
+
+
+
+# Entrypoints definition
+#
+# Optional
+# Default:
+[entryPoints]
+    [entryPoints.http]
+    address = ":80"
+#    [entryPoints.https]
+#    address = ":443"
+#    [entryPoints.https.tls]
+#      [[entryPoints.https.tls.certificates]]
+#      certFile = "cert/traefik.crt"
+#      keyFile = "cert/traefik.key"
+
+
+#[acme]
+#email = "zhanghao@icsoc.net"
+#storage = "acme.json"
+#caServer = "wss://192.168.165.69:30210"
+#entryPoint = "https"
+
+#[[acme.domains]]
+#  main = "icsoc.net
+#  sans = ["im-accessor-test.icsoc.net"]
+#[[acme.domains]]
+#  main = "local2.com"
+#  sans = ["test1.local2.com", "test2x.local2.com"]
+#[[acme.domains]]
+#  main = "local3.com"
+#[[acme.domains]]
+#  main = "local4.com"
+# Enable access logs
+# By default it will write to stdout and produce logs in the textual
+# Common Log Format (CLF), extended with additional fields.
+#
+# Optional
+#
+[accessLog]
+
+# Sets the file path for the access log. If not specified, stdout will be used.
+# Intermediate directories are created if necessary.
+#
+# Optional
+# Default: os.Stdout
+#
+filePath = "/data/access.log"
+
+# Format is either "json" or "common".
+#
+# Optional
+# Default: "common"
+#
+format = "json"
+
+################################################################
+# Web configuration backend
+################################################################
+
+# Enable web configuration backend
+[web]
+
+# Web administration port
+#
+# Required
+#
+address = ":8085"
+
+
+[web.metrics.prometheus]
+
+# Buckets for latency metrics
+# #
+# # Optional
+# # Default: [0.1, 0.3, 1.2, 5]
+buckets=[0.1,0.3,1.2,5.0]
+
+[web.metrics.statsd]
+address = "0.0.0.0:8125"
+pushinterval = "10s"
+
+
+[web.statistics]
+recentErrors = 10
+
+
+
+
+################################################################
+# Docker configuration backend
+################################################################
+
+# Enable Docker configuration backend
+#[docker]
+
+# Docker server endpoint. Can be a tcp or a unix socket endpoint.
+#
+# Required
+# Default: "unix:///var/run/docker.sock"
+#
+# endpoint = "tcp://10.10.10.10:2375"
+
+# Default domain used.
+# Can be overridden by setting the "traefik.domain" label on a container.
+#
+# Optional
+# Default: ""
+#
+# domain = "docker.localhost"
+
+# Expose containers by default in traefik
+#
+# Optional
+# Default: true
+#
+# exposedbydefault = true
+
+
+
+[kubernetes]
+
+# Kubernetes server endpoint.
+# #
+# # Optional for in-cluster configuration, required otherwise.
+# # Default: empty
+# #
+# # endpoint = "http://localhost:8080"
+#
+# # Bearer token used for the Kubernetes client configuration.
+# #
+# # Optional
+# # Default: empty
+# #
+# # token = "my token"
+#
+# # Path to the certificate authority file.
+# # Used for the Kubernetes client configuration.
+# #
+# # Optional
+# # Default: empty
+# #
+# # certAuthFilePath = "/my/ca.crt"
+#
+# # Array of namespaces to watch.
+# #
+# # Optional
+# # Default: all namespaces (empty array).
+# #
+# # namespaces = ["default", "production"]
+#
+# # Ingress label selector to identify Ingress objects that should be processed.
+# #
+# # Optional
+# # Default: empty (process all Ingresses)
+# #
+# # labelselector = "A and not B"
+#
+# # Disable PassHost Headers.
+# #
+# # Optional
+# # Default: false
+# #
+# # disablePassHostHeaders = true

@@ -1,0 +1,15 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: wx-test
+  namespace: im-test
+spec:
+  rules:
+  - host: wx-test.icsoc.net
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: im-proxy
+          servicePort: 80
+

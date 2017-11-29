@@ -1,0 +1,14 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: im-accessor-test
+  namespace: im-test
+spec:
+  rules:
+  - host: im-accessor-test
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: im-accessor
+          servicePort: 39201

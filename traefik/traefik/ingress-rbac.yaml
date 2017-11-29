@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: ingress
+  namespace: im-test
+
+---
+
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: ingress
+subjects:
+  - kind: ServiceAccount
+    name: ingress
+    namespace: im-test
+roleRef:
+  kind: ClusterRole
+  name: cluster-admin
+  apiGroup: rbac.authorization.k8s.io

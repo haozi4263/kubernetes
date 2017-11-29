@@ -1,0 +1,53 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+#kind: DaemonSet
+metadata:
+  name: traefik-ingress-lb
+  namespace: im-test
+  labels:
+    k8s-app: traefik-ingress-lb
+spec:
+  template:
+    metadata:
+      labels:
+        k8s-app: traefik-ingress-lb
+        name: traefik-ingress-lb
+    spec:
+      terminationGracePeriodSeconds: 60
+      hostNetwork: true
+      restartPolicy: Always
+      serviceAccountName: ingress
+      containers:
+      - image: registry.cn-beijing.aliyuncs.com/icsoc/traefik:v9
+#      - image: traefik
+        name: traefik-ingress-lb
+        resources:
+          limits:
+            cpu: 200m
+            memory: 60Mi
+          requests:
+            cpu: 100m
+            memory: 40Mi
+        ports:
+        - name: http
+          containerPort: 80
+          hostPort: 80
+        - name: admin
+          containerPort: 8580
+          hostPort: 8580
+        args:
+        - --web
+        - --web.address=:8580
+        - --kubernetes
+        - --defaultEntryPoints=http
+        - --configfile=/data/conf/traefik.toml
+       # - --accesslog=true
+       # - --accesslog.format=json
+       # - --accessLogsFile="/var/log/access.log"
+        volumeMounts:
+        - name: traefik
+          mountPath: /data/conf
+      volumes:
+      - name: traefik
+        configMap:
+          name: traefik

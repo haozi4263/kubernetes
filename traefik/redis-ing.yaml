@@ -1,0 +1,14 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: reids-test
+  namespace: im-test
+spec:
+  rules:
+  - host: redis-test.icsoc.net
+   # http:
+   #   paths:
+   #   - path: /
+        backend:
+          url = "ws://im-cs-test"
+          #servicePort: 4999

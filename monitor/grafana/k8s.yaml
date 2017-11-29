@@ -1,0 +1,105 @@
+apiVersion: extensions/v1beta1
+kind: DaemonSet
+metadata:
+  name: snap
+  namespace: kube-system
+spec:
+  template:
+    metadata:
+      name: snap
+      labels:
+        daemon: snapd
+    spec:
+      hostPID: true
+      hostNetwork: true
+      containers:
+      - name: snap
+        image: raintank/snap_k8s:v5
+        volumeMounts:
+          - mountPath: /sys/fs/cgroup
+            name: cgroup
+          - mountPath: /var/run/docker.sock
+            name: docker-sock
+          - mountPath: /var/lib/docker
+            name: fs-stats
+          - mountPath: /usr/local/bin/docker
+            name: docker
+          - mountPath: /proc_host
+            name: proc
+          - mountPath: /opt/snap/tasks
+            name: snap-tasks
+        ports:
+        - containerPort: 8181
+          hostPort: 8181
+          name: snap-api
+        imagePullPolicy: IfNotPresent
+        securityContext:
+          privileged: true
+        env:
+          - name: PROCFS_MOUNT
+            value: /proc_host
+      volumes:
+        - name: dev
+          hostPath:
+            path: /dev
+        - name: cgroup
+          hostPath:
+            path: /sys/fs/cgroup
+        - name: docker-sock
+          hostPath:
+            path: /var/run/docker.sock
+        - name: fs-stats
+          hostPath:
+            path: /var/lib/docker
+        - name: docker
+          hostPath:
+            path: /usr/bin/docker
+        - name: proc
+          hostPath:
+            path: /proc
+        - name: snap-tasks
+          configMap:
+            name: snap-tasks
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: snap-tasks
+  namespace: kube-system
+data:
+  core.json: |-
+    {
+        "version": 1,
+        "schedule": {
+            "type": "simple",
+            "interval": "10s"
+        },
+        "workflow": {
+            "collect": {
+                "metrics": {
+                    "/intel/docker/*":{},
+                    "/intel/procfs/cpu/*": {},
+                    "/intel/procfs/meminfo/*": {},
+                    "/intel/procfs/iface/*": {},
+                    "/intel/linux/iostat/*": {},
+                    "/intel/procfs/load/*": {}
+                },
+                "config": {
+                    "/intel/procfs": {
+                        "proc_path": "/proc_host"
+                    }
+                },
+                "process": null,
+                "publish": [
+                    {
+                        "plugin_name": "graphite",                    
+                        "config": {
+                            "prefix": "snap.dev.<%NODE%>",
+                            "server": "172.16.10.19",
+                            "port": 2003
+                        }
+                    }
+                ]
+            }
+        }
+    }

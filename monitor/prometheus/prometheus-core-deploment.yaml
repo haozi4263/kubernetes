@@ -1,0 +1,56 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: prometheus-core
+  namespace: kube-system
+  labels:
+    app: prometheus
+    component: core
+spec:
+  replicas: 1
+  template:
+    metadata:
+      name: prometheus-main
+      labels:
+        app: prometheus
+        component: core
+    spec:
+      serviceAccountName: prometheus-k8s
+      containers:
+      - name: prometheus
+        image: prom/prometheus:v1.8.2
+        args:
+          #- '-storage.local.retention=336h'
+          - '-storage.local.memory-chunks=1048576'
+          - '-config.file=/etc/prometheus/prometheus.yaml'
+          #- '--storage.tsdb.path=/prometheus/data'
+        #  - '-alertmanager.url=http://192.168.165.65:9093/'
+        ports:
+        - name: webui
+          containerPort: 9090
+        resources:
+          requests:
+            cpu: 500m
+            memory: 500M
+          limits:
+            cpu: 500m
+            memory: 500M
+        volumeMounts:
+        - name: config-volume
+          mountPath: /etc/prometheus
+        - name: rules-volume
+          mountPath: /etc/prometheus-rules
+        - name: prome-data
+          mountPath: /prometheus/data
+      volumes:
+      - name: config-volume
+        configMap:
+          name: prometheus-core
+      - name: rules-volume
+        configMap:
+          name: prometheus-rules
+      - name: prome-data
+#        hostPath: 
+#          path: /data/prometheus
+        persistentVolumeClaim:
+           claimName: prometheus-pvc

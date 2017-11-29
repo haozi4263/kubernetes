@@ -1,0 +1,58 @@
+apiVersion: extensions/v1beta1
+kind: DaemonSet
+metadata:
+  name: fluentd-pilot
+  namespace: kube-system
+  labels:
+    k8s-app: fluentd-pilot
+    kubernetes.io/cluster-service: "true"
+spec:
+  template:
+    metadata:
+      labels:
+        k8s-app: fluentd-es
+        kubernetes.io/cluster-service: "true"
+        version: v1.22
+      # This annotation ensures that fluentd does not get evicted if the node
+      # supports critical pod annotation based priority scheme.
+      # Note that this does not guarantee admission on the nodes (#40573).
+      annotations:
+        scheduler.alpha.kubernetes.io/critical-pod: ''
+        scheduler.alpha.kubernetes.io/tolerations: '[{"key": "node.alpha.kubernetes.io/ismaster", "effect": "NoSchedule"}]'
+    spec:
+      containers:
+      - name: fluentd-pilot
+        image: registry.cn-hangzhou.aliyuncs.com/wangbs/fluentd-pilot:latest
+        resources:
+          limits:
+            memory: 200Mi
+          requests:
+            cpu: 100m
+            memory: 200Mi
+        env:
+          - name: "FLUENTD_OUTPUT"
+            value: "aliyun_sls"
+          - name: "ALIYUNSLS_PROJECT"
+            value: "im-test2"
+          - name: "ALIYUNSLS_REGION_ENDPOINT"
+            value: "cn-beijing.log.aliyuncs.com"
+          - name: "ALIYUNSLS_ACCESS_KEY_ID"
+            value: "im@icsoc"
+          - name: "ALIYUNSLS_ACCESS_KEY_SECRET"
+            value: "8tsWV06NKDPY4PHT"
+        volumeMounts:
+        - name: sock
+          mountPath: /var/run/docker.sock
+        - name: root
+          mountPath: /host
+          readOnly: true
+      #nodeSelector:
+      #  alpha.kubernetes.io/fluentd-ds-ready: "true"
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - name: sock
+        hostPath:
+          path: /var/run/docker.sock
+      - name: root
+        hostPath:
+          path: /

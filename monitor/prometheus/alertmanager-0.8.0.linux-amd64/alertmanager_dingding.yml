@@ -1,0 +1,15 @@
+global:
+  #已经解决
+  resolve_timeout: 5m
+route:
+  group_by: ['job']
+  group_wait: 30s
+  #同一组间隔
+  group_interval: 5m
+  #相同报警内容间隔
+  repeat_interval: 3h
+  receiver: 'webhook'
+receivers:
+- name: 'webhook'
+  webhook_configs:
+  - url: 'https://oapi.dingtalk.com/robot/send?access_token=e0ca1e13c68b620e08a464bcb42138b7a905920c21a08b967ff2310dea33dd10'

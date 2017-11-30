@@ -19,7 +19,7 @@ spec:
       imagePullSecrets:
       - name: test
       hostNetwork: true
-      nodeName: cn-zhangjiakou.i-8vbh0qhpghealq****
+      nodeName: cn-zhangjiakou.i-8vbh0qhpg****
       containers:
       - name: etcd-node01
         image: registry.cn-beijing.aliyuncs.com/test/etcd-cluster
@@ -28,19 +28,14 @@ spec:
         - containerPort: 2379
 #        - containerPort: 2380
         command: ["/usr/bin/etcd","--name","node01","--initial-advertise-peer-urls","http://192.168.179.184:2380","--listen-peer-urls","http://192.168.179.184:2380","--listen-client-urls","http://192.168.179.184:2379,http://127.0.0.1:2379","--advertise-client-urls","http://192.168.179.184:2379","--initial-cluster-token","icsoc-etcd-cluster01","--initial-cluster","node01=http://192.168.179.184:2380,node02=http://192.168.179.185:2380,node03=http://192.168.179.186:2380","--initial-cluster-state","new"]
-#        args:
-#         - --name node01
-#         - --initial-advertise-peer-urls http://192.168.179.184:2380
-#         - --listen-peer-urls http://192.168.179.184:2380
-#         - --listen-client-urls http://192.168.179.184:2379,http://127.0.0.1:2379
-#         - --advertise-client-urls http://192.168.179.184:2379
-#        volumeMounts:
-#        - mountPath: /etcddata
-#          name: etcd-node
-#      volumes:
-#        hostPath:
-#          path: /data/etcddata
-#      - name: etcd-node
+        volumeMounts:
+        - mountPath: /etcddata
+          name: etcd-node01
+      volumes:
+      - name: etcd-node01
+        hostPath:
+          path: /data/etcddata
+
 ---
 apiVersion: extensions/v1beta1
 kind: Deployment
@@ -48,12 +43,12 @@ metadata:
   name: etcd-node02
   namespace: test
   labels:
-    name: test
+    name: etcd
     kubernetes.io/cluster-service: "true"
     addonmanager.kubernetes.io/mode: Reconcile
 spec:
 #  selector:
-#    name: test
+#    name: etcd
   template:
     metadata:
       name: etcd-cluster
@@ -63,7 +58,7 @@ spec:
       imagePullSecrets:
       - name: test
       hostNetwork: true
-      nodeName: cn-zhangjiakou.i-8vbh0qhpg******
+      nodeName: cn-zhangjiakou.i-8vbh0qhpghe*******
       containers:
       - name: etcd-node02
         image: registry.cn-beijing.aliyuncs.com/test/etcd-cluster
@@ -72,13 +67,13 @@ spec:
         - containerPort: 2379
 #        - containerPort: 2380
         command: ["/usr/bin/etcd","--name","node02","--initial-advertise-peer-urls","http://192.168.179.185:2380","--listen-peer-urls","http://192.168.179.185:2380","--listen-client-urls","http://192.168.179.185:2379,http://127.0.0.1:2379","--advertise-client-urls","http://192.168.179.185:2379","--initial-cluster-token","icsoc-etcd-cluster01","--initial-cluster","node01=http://192.168.179.184:2380,node02=http://192.168.179.185:2380,node03=http://192.168.179.186:2380","--initial-cluster-state","new"]
-#        volumeMounts:
-#        - mountPath: /etcddata
-#          name: etcd-node
-#      volumes:
-#        hostPath:
-#          path: /data/etcddata
-#      - name: etcd-node
+        volumeMounts:
+        - mountPath: /etcddata
+          name: etcd-node02
+      volumes:
+      - name: etcd-node02
+        hostPath:
+          path: /data/etcddata
 ---
 apiVersion: extensions/v1beta1
 kind: Deployment
@@ -101,7 +96,7 @@ spec:
       imagePullSecrets:
       - name: im-staging
       hostNetwork: true
-      nodeName: cn-zhangjiakou.i-8vbh0qhpghea*****
+      nodeName: cn-zhangjiakou.i-8vbh0qhpg******
       containers:
       - name: etcd-node03
         image: registry.cn-beijing.aliyuncs.com/test/etcd-cluster
@@ -110,10 +105,10 @@ spec:
         - containerPort: 2379
 #        - containerPort: 2380
         command: ["/usr/bin/etcd","--name","node03","--initial-advertise-peer-urls","http://192.168.179.186:2380","--listen-peer-urls","http://192.168.179.186:2380","--listen-client-urls","http://192.168.179.186:2379,http://127.0.0.1:2379","--advertise-client-urls","http://192.168.179.186:2379","--initial-cluster-token","icsoc-etcd-cluster01","--initial-cluster","node01=http://192.168.179.184:2380,node02=http://192.168.179.185:2380,node03=http://192.168.179.186:2380","--initial-cluster-state","new"]
-#        volumeMounts:
-#        - mountPath: /etcddata
-#          name: etcd-node
-#      volumes:
-#        hostPath:
-#          path: /data/etcddata
-#      - name: etcd-node
+        volumeMounts:
+        - mountPath: /etcddata
+          name: etcd-node03
+      volumes:
+      - name: etcd-node03
+        hostPath:
+          path: /data/etcddata

@@ -1,0 +1,54 @@
+#!/bin/bash
+
+
+if [ "$1" == "sh" ]
+  then
+    #登录sh
+    pod_name=$2
+    release=$3
+        kubectl -n im-$3 exec -it  `kubectl -n im-$3 get pod |grep -m 1 $2|grep Running|awk '{print $1}'` /bin/bash
+#    else
+#        echo "sh pod name | all"
+    exit 0
+fi
+
+
+if [ "$1" == "save" ]
+ then
+    #保存应用日志
+    pod_name=$2
+    release=$3
+        kubectl -n im-$3 logs  `kubectl -n im-$3 get pod |grep -m 1 $2|grep Running|awk '{print $1}'` > ./$2-$3`date +%m%d-%H:%M:%S.txt`
+    exit 0
+fi
+
+if [ "$1" == "log" ]
+  then
+    #实时查看最新20条容器日志
+    pod_name=$2
+    release=$3
+        kubectl -n im-$3 logs -f --tail 20 `kubectl -n im-$3 get pod |grep -m 1 $2|grep Running|awk '{print $1}'`
+    exit 0
+fi
+
+if [ "$1" == "logs" ]
+  then
+    #实时查看所有
+    pod_name=$2
+    release=$3
+        kubectl -n im-$3 logs -f  `kubectl -n im-$3 get pod |grep -m 1 $2|grep Running|awk '{print $1}'`
+    exit 0
+fi
+
+
+if [ "$1" == "-h" ] || [ "$1" == "-help" ]
+  then
+    echo " log:  实时查看所选最新20条容器日志"
+    echo " logs: 实时查看所选所有容器日志"
+    echo " save: 保存所选容器日志到当前目录 "
+    echo " sh:   登录到所选容器 "
+    echo " 例子: sudo kube sh im-cs dev-->登录到im-cs开发环容器中 (参数：sh--执行命令  im-cs--容器名 dev/test 环境) "
+    echo " 例子: sudo kube save im-cs test-->保存im-cs所有日志测试环境到当前目录"
+    exit 0
+fi
+

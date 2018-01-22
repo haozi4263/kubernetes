@@ -6,7 +6,7 @@ if [ "$1" == "sh" ]
     #登录sh
     pod_name=$2
     release=$3
-        kubectl -n im-$3 exec -it  `kubectl -n im-$3 get pod |grep -m 1 $2|grep Running|awk '{print $1}'` /bin/bash
+        kubectl -n $3 exec -it -c redisdb `kubectl -n $3 get pod |grep -m 1 $2|grep Running|awk '{print $1}'` /bin/bash
 #    else
 #        echo "sh pod name | all"
     exit 0
@@ -17,8 +17,11 @@ if [ "$1" == "save" ]
  then
     #保存应用日志
     pod_name=$2
-    release=$3
-        kubectl -n im-$3 logs  `kubectl -n im-$3 get pod |grep -m 1 $2|grep Running|awk '{print $1}'` > ./$2-$3`date +%m%d-%H:%M:%S.txt`
+    namespace=$3
+    since-time=$4
+    instance=$5
+        #kubectl -n $3 logs --since-time=$4+08:00  `kubectl -n $3 get pod |grep -m 1 $2|grep Running|awk '{print $1}'` > /home/im-logs/$2-$3-$4.html
+        kubectl -n $3 logs --since-time=$4+08:00  `kubectl -n $3 get pod |egrep "$2"|sed -n "$5p"|awk '{print $1}'` > /home/im-logs/$2-$5-$3-$4.html
     exit 0
 fi
 
@@ -27,7 +30,7 @@ if [ "$1" == "log" ]
     #实时查看最新20条容器日志
     pod_name=$2
     release=$3
-        kubectl -n im-$3 logs -f --tail 20 `kubectl -n im-$3 get pod |grep -m 1 $2|grep Running|awk '{print $1}'`
+        kubectl -n $3 logs -f --tail 20 `kubectl -n $3 get pod |grep -m 1 $2|grep Running|awk '{print $1}'`
     exit 0
 fi
 
@@ -36,7 +39,7 @@ if [ "$1" == "logs" ]
     #实时查看所有
     pod_name=$2
     release=$3
-        kubectl -n im-$3 logs -f  `kubectl -n im-$3 get pod |grep -m 1 $2|grep Running|awk '{print $1}'`
+        kubectl -n $3 logs -f  `kubectl -n $3 get pod |grep -m 1 $2|grep Running|awk '{print $1}'`
     exit 0
 fi
 
@@ -47,8 +50,10 @@ if [ "$1" == "-h" ] || [ "$1" == "-help" ]
     echo " logs: 实时查看所选所有容器日志"
     echo " save: 保存所选容器日志到当前目录 "
     echo " sh:   登录到所选容器 "
-    echo " 例子: sudo kube sh im-cs dev-->登录到im-cs开发环容器中 (参数：sh--执行命令  im-cs--容器名 dev/test 环境) "
-    echo " 例子: sudo kube save im-cs test-->保存im-cs所有日志测试环境到当前目录"
+    echo " 例子: sudo kube sh im-xx dev-->登录到im-db开发环容器中 (参数：sh--执行命令  im-db--容器名 dev/test 环境) "
+    echo " 例子: sudo kube save im-xx test-->保存im-xx所有日志测试环境到当前目录"
     exit 0
 fi
+
+
 

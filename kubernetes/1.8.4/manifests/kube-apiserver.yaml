@@ -1,0 +1,91 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  annotations:
+    scheduler.alpha.kubernetes.io/critical-pod: ""
+  creationTimestamp: null
+  labels:
+    component: kube-apiserver
+    tier: control-plane
+  name: kube-apiserver
+  namespace: kube-system
+spec:
+  containers:
+  - command:
+    - kube-apiserver
+    - --apiserver-count=500
+    - --runtime-config=admissionregistration.k8s.io/v1alpha1
+    - --client-ca-file=/etc/kubernetes/pki/apiserver-ca.crt
+    - --kubelet-client-certificate=/etc/kubernetes/pki/apiserver-kubelet-client.crt
+    - --requestheader-client-ca-file=/etc/kubernetes/pki/front-proxy-ca.crt
+    - --proxy-client-cert-file=/etc/kubernetes/pki/front-proxy-client.crt
+    - --requestheader-group-headers=X-Remote-Group
+    - --requestheader-allowed-names=front-proxy-client
+    - --service-account-key-file=/etc/kubernetes/pki/sa.pub
+    - --tls-private-key-file=/etc/kubernetes/pki/apiserver.key
+    - --kubelet-client-key=/etc/kubernetes/pki/apiserver-kubelet-client.key
+    - --secure-port=6443
+    - --allow-privileged=true
+    - --service-cluster-ip-range=172.21.0.0/20
+    - --tls-cert-file=/etc/kubernetes/pki/apiserver.crt
+    - --requestheader-extra-headers-prefix=X-Remote-Extra-
+    - --advertise-address=192.168.165.82
+    - --proxy-client-key-file=/etc/kubernetes/pki/front-proxy-client.key
+    - --requestheader-username-headers=X-Remote-User
+    - --enable-bootstrap-token-auth=true
+    - --insecure-port=0
+    - --admission-control=Initializers,NamespaceLifecycle,LimitRanger,ServiceAccount,PersistentVolumeLabel,DefaultStorageClass,DefaultTolerationSeconds,NodeRestriction,ResourceQuota
+    - --kubelet-preferred-address-types=InternalIP,ExternalIP,Hostname
+    - --authorization-mode=Node,RBAC
+    - --etcd-servers=https://192.168.165.82:2379,https://192.168.165.83:2379,https://192.168.165.84:2379
+    - --etcd-cafile=/etc/kubernetes/pki/etcd/ca.pem
+    - --etcd-certfile=/etc/kubernetes/pki/etcd/etcd-client.pem
+    - --etcd-keyfile=/etc/kubernetes/pki/etcd/etcd-client-key.pem
+    - --cloud-provider=external
+    image: registry.cn-hangzhou.aliyuncs.com/acs/kube-apiserver-amd64:v1.8.4
+    imagePullPolicy: IfNotPresent
+    livenessProbe:
+      failureThreshold: 8
+      httpGet:
+        host: 127.0.0.1
+        path: /healthz
+        port: 6443
+        scheme: HTTPS
+      initialDelaySeconds: 15
+      timeoutSeconds: 15
+    name: kube-apiserver
+    resources:
+      requests:
+        cpu: 250m
+    volumeMounts:
+    - mountPath: /etc/kubernetes/pki
+      name: k8s-certs
+      readOnly: true
+    - mountPath: /etc/ssl/certs
+      name: ca-certs
+      readOnly: true
+    - mountPath: /etc/pki
+      name: ca-certs-etc-pki
+      readOnly: true
+    - mountPath: /etc/kubernetes/cloud-config
+      name: cloud-config
+      readOnly: true
+  hostNetwork: true
+  volumes:
+  - hostPath:
+      path: /etc/kubernetes/pki
+      type: DirectoryOrCreate
+    name: k8s-certs
+  - hostPath:
+      path: /etc/ssl/certs
+      type: DirectoryOrCreate
+    name: ca-certs
+  - hostPath:
+      path: /etc/pki
+      type: DirectoryOrCreate
+    name: ca-certs-etc-pki
+  - hostPath:
+      path: /etc/kubernetes/cloud-config
+      type: FileOrCreate
+    name: cloud-config
+status: {}

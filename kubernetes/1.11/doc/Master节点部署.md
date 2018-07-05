@@ -1,14 +1,12 @@
-1.部署Kubernetes API服务部署
-
 0.准备软件包
 
      cd /usr/local/src/kubernetes
-    [root@linux-node1 kubernetes]# cp server/bin/kube-apiserver /opt/kubernetes/bin/
-    [root@linux-node1 kubernetes]# cp server/bin/kube-controller-manager /opt/kubernetes/bin/
-    [root@linux-node1 kubernetes]# cp server/bin/kube-scheduler /opt/kubernetes/bin/
+     cp server/bin/kube-apiserver /opt/kubernetes/bin/
+     cp server/bin/kube-controller-manager /opt/kubernetes/bin/
+     cp server/bin/kube-scheduler /opt/kubernetes/bin/
 1.创建生成CSR的 JSON 配置文件
 
-    [root@master01 ssl]# vim kubernetes-csr-master.json 
+    vim kubernetes-csr-master.json (加入3个master和vip地址)
 
     {
       "CN": "kubernetes",
@@ -48,23 +46,23 @@
        -ca-key=/opt/kubernetes/ssl/ca-key.pem \
        -config=/opt/kubernetes/ssl/ca-config.json \
        -profile=kubernetes kubernetes-csr.json | cfssljson -bare kubernetes
-    [root@linux-node1 src]# cp kubernetes*.pem /opt/kubernetes/ssl/
+     cp kubernetes*.pem /opt/kubernetes/ssl/
      scp kubernetes*.pem 192.168.10.101:/opt/kubernetes/ssl/
      scp kubernetes*.pem 192.168.10.102:/opt/kubernetes/ssl/
 3.创建 kube-apiserver 使用的客户端 token 文件
 
-      head -c 16 /dev/urandom | od -An -t x | tr -d ' '
+    head -c 16 /dev/urandom | od -An -t x | tr -d ' '
     ad6d5bb607a186796d8861557df0d17f
-     vim /opt/kubernetes/ssl/ bootstrap-token.csv
+    vim /opt/kubernetes/ssl/ bootstrap-token.csv
     ad6d5bb607a186796d8861557df0d17f,kubelet-bootstrap,10001,"system:kubelet-bootstrap"
-    4.创建基础用户名/密码认证配置
-     vim /opt/kubernetes/ssl/basic-auth.csv
-    admin,admin,1
-    readonly,readonly,2
+    创建基础用户名/密码认证配置
+        vim /opt/kubernetes/ssl/basic-auth.csv
+        admin,admin,1
+        readonly,readonly,2
 
 4.部署Kubernetes API Server
 
-     vim /usr/lib/systemd/system/kube-apiserver.service
+    vim /usr/lib/systemd/system/kube-apiserver.service
     [Unit]
     Description=Kubernetes API Server
     Documentation=https://github.com/GoogleCloudPlatform/kubernetes
@@ -110,16 +108,14 @@
     [Install]
     WantedBy=multi-user.target
 
-5.启动API Server服务
-
-     systemctl daemon-reload
-     systemctl enable kube-apiserver
-     systemctl start kube-apiserver
-    查看API Server服务状态
-
-     systemctl status kube-apiserver
-    部署Controller Manager服务
-     vim /usr/lib/systemd/system/kube-controller-manager.service
+    启动API Server服务:
+         systemctl daemon-reload
+         systemctl enable kube-apiserver
+         systemctl start kube-apiserver
+  
+ 5.部署Controller Manager服务
+ 
+    vim /usr/lib/systemd/system/kube-controller-manager.service
     [Unit]
     Description=Kubernetes Controller Manager
     Documentation=https://github.com/GoogleCloudPlatform/kubernetes
@@ -147,15 +143,14 @@
     [Install]
     WantedBy=multi-user.target
 
-6.启动Controller Manager
-
-     systemctl daemon-reload
-    [root@linux-node1 scripts]# systemctl enable kube-controller-manager
-    [root@linux-node1 scripts]# systemctl start kube-controller-manager
-    4.查看服务状态
-    [root@linux-node1 scripts]# systemctl status kube-controller-manager
-    部署Kubernetes Scheduler
-     vim /usr/lib/systemd/system/kube-scheduler.service
+    启动Controller Manager:
+         systemctl daemon-reload
+         systemctl enable kube-controller-manager
+         systemctl start kube-controller-manager
+         
+ 6.部署Kubernetes Scheduler
+ 
+    vim /usr/lib/systemd/system/kube-scheduler.service
     [Unit]
     Description=Kubernetes Scheduler
     Documentation=https://github.com/GoogleCloudPlatform/kubernetes
@@ -174,87 +169,76 @@
 
     [Install]
     WantedBy=multi-user.target
-
-2.部署服务
-
-     systemctl daemon-reload
-    [root@linux-node1 scripts]# systemctl enable kube-scheduler
-    [root@linux-node1 scripts]# systemctl start kube-scheduler
-    [root@linux-node1 scripts]# systemctl status kube-scheduler
-
-
+    
+    启动服务:
+         systemctl daemon-reload
+         systemctl enable kube-scheduler
+         systemctl start kube-scheduler
+         systemctl status kube-scheduler
 
 
 部署kubectl 命令行工具
 
     1.准备二进制命令包
-
-     cd /usr/local/src/kubernetes/client/bin
-    [root@linux-node1 bin]# cp kubectl /opt/kubernetes/bin/
+        cd /usr/local/src/kubernetes/client/bin
+        cp kubectl /opt/kubernetes/bin/
     2.创建 admin 证书签名请求
-
-     cd /usr/local/src/ssl/
-    [root@linux-node1 ssl]# vim admin-csr.json
-    {
-      "CN": "admin",
-      "hosts": [],
-      "key": {
-        "algo": "rsa",
-        "size": 2048
-      },
-      "names": [
+        cd /usr/local/src/ssl/
+        [root@linux-node1 ssl]# vim admin-csr.json
         {
-          "C": "CN",
-          "ST": "BeiJing",
-          "L": "BeiJing",
-          "O": "system:masters",
-          "OU": "System"
+          "CN": "admin",
+          "hosts": [],
+          "key": {
+            "algo": "rsa",
+            "size": 2048
+          },
+          "names": [
+            {
+              "C": "CN",
+              "ST": "BeiJing",
+              "L": "BeiJing",
+              "O": "system:masters",
+              "OU": "System"
+            }
+          ]
         }
-      ]
-    }
     3.生成 admin 证书和私钥：
+        cfssl gencert -ca=/opt/kubernetes/ssl/ca.pem \
+        -ca-key=/opt/kubernetes/ssl/ca-key.pem \
+        -config=/opt/kubernetes/ssl/ca-config.json \
+        -profile=kubernetes admin-csr.json | cfssljson -bare admin
+        ls -l admin*
+        -rw-r--r-- 1 root root 1009 Mar  5 12:29 admin.csr
+        -rw-r--r-- 1 root root  229 Mar  5 12:28 admin-csr.json
+        -rw------- 1 root root 1675 Mar  5 12:29 admin-key.pem
+        -rw-r--r-- 1 root root 1399 Mar  5 12:29 admin.pem
 
-    [root@linux-node1 ssl]# cfssl gencert -ca=/opt/kubernetes/ssl/ca.pem \
-       -ca-key=/opt/kubernetes/ssl/ca-key.pem \
-       -config=/opt/kubernetes/ssl/ca-config.json \
-       -profile=kubernetes admin-csr.json | cfssljson -bare admin
-    [root@linux-node1 ssl]# ls -l admin*
-    -rw-r--r-- 1 root root 1009 Mar  5 12:29 admin.csr
-    -rw-r--r-- 1 root root  229 Mar  5 12:28 admin-csr.json
-    -rw------- 1 root root 1675 Mar  5 12:29 admin-key.pem
-    -rw-r--r-- 1 root root 1399 Mar  5 12:29 admin.pem
-
-    [root@linux-node1 src]# mv admin*.pem /opt/kubernetes/ssl/
+        mv admin*.pem /opt/kubernetes/ssl/
     4.设置集群参数
-
-    [root@linux-node1 src]# kubectl config set-cluster kubernetes \
-       --certificate-authority=/opt/kubernetes/ssl/ca.pem \
-       --embed-certs=true \
-       --server=https://192.168.10.104:8443
-    Cluster "kubernetes" set.
+         kubectl config set-cluster kubernetes \
+         --certificate-authority=/opt/kubernetes/ssl/ca.pem \
+         --embed-certs=true \
+         --server=https://192.168.10.104:8443
+        Cluster "kubernetes" set.
     5.设置客户端认证参数
-
-    [root@linux-node1 src]# kubectl config set-credentials admin \
-       --client-certificate=/opt/kubernetes/ssl/admin.pem \
-       --embed-certs=true \
-       --client-key=/opt/kubernetes/ssl/admin-key.pem
-    User "admin" set.
+         kubectl config set-credentials admin \
+         --client-certificate=/opt/kubernetes/ssl/admin.pem \
+         --embed-certs=true \
+         --client-key=/opt/kubernetes/ssl/admin-key.pem
+         User "admin" set.
     6.设置上下文参数
-
-    [root@linux-node1 src]# kubectl config set-context kubernetes \
-       --cluster=kubernetes \
-       --user=admin
-    Context "kubernetes" created.
+         kubectl config set-context kubernetes \
+         --cluster=kubernetes \
+         --user=admin
+        Context "kubernetes" created.
     7.设置默认上下文
-
-    [root@linux-node1 src]# kubectl config use-context kubernetes
-    Switched to context "kubernetes".
+        kubectl config use-context kubernetes
+        Switched to context "kubernetes".
     8.使用kubectl工具
-
-     kubectl get cs
-    NAME                 STATUS    MESSAGE             ERROR
-    controller-manager   Healthy   ok
-    scheduler            Healthy   ok
-    etcd-1               Healthy   {"health":"true"}
-    etcd-2               Healthy   {"health":"true"}
-    etcd-0               Healthy   {"health":"true"}
+        kubectl get cs
+        NAME                 STATUS    MESSAGE             ERROR
+        controller-manager   Healthy   ok
+        scheduler            Healthy   ok
+        etcd-1               Healthy   {"health":"true"}
+        etcd-2               Healthy   {"health":"true"}
+        etcd-0               Healthy   {"health":"true"}

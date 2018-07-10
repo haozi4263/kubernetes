@@ -34,3 +34,14 @@
     </tr>
 </table>
 
+
+
+# 手动部署
+- [系统初始化](kubernetes/tree/master/1.11/docs/init.md)
+- [CA证书制作](kubernetes/tree/master/1.11/docs/ca.md)
+- [ETCD集群部署](kubernetes/tree/master/1.11/docs/etcd-install.md)
+- [Master节点部署](kubernetes/tree/master/1.11/docs/master.md)
+- [Node节点部署](kubernetes/tree/master/1.11/docs/node.md)
+- [Flannel网络部署](kubernetes/tree/master/1.11/docs/flannel.md)
+- [创建第一个K8S应用](kubernetes/tree/master/1.11/docs/app.md)
+- [CoreDNS和Dashboard部署](kubernetes/tree/master/1.11/docs/dashboard.md)

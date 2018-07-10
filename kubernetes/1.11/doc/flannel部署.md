@@ -105,6 +105,7 @@
      systemctl status flannel
 
 8.配置Docker使用Flannel
+
     vim /usr/lib/systemd/system/docker.service
     [Unit] #在Unit下面修改After和增加Requires
     After=network-online.target firewalld.service flannel.service

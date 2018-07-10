@@ -18,12 +18,12 @@
 <table border="0">
     <tr>
             <td><strong>手动部署</strong></td>
-            <td><a href="kubernetes/1.11/docs/系统初始化.md">1.系统初始化</a></td>
-            <td><a href="kubernetes/1.11/docs/CA证书制作.md">2.CA证书制作</a></td>
-            <td><a href="kubernetes/1.11/docs/ETCD集群部署.md">3.ETCD集群部署</a></td>
-            <td><a href="kubernetes/1.11/docs/Master节点部署.md">4.Master节点部署</a></td>
-            <td><a href="kubernetes/1.11/docs/Node节点部署.md">5.Node节点部署</a></td>
-            <td><a href="kubernetes/1.11/docs/flannel部署.md">6.Flannel部署</a></td>
+            <td><a href="kubernetes/tree/master/1.11/docs/系统初始化.md">1.系统初始化</a></td>
+            <td><a href="kubernetes/tree/master/1.11/docs/CA证书制作.md">2.CA证书制作</a></td>
+            <td><a href="kubernetes/tree/master/1.11/docs/ETCD集群部署.md">3.ETCD集群部署</a></td>
+            <td><a href="kubernetes/tree/master/1.11/docs/Master节点部署.md">4.Master节点部署</a></td>
+            <td><a href="kubernetes/tree/master/1.11/docs/Node节点部署.md">5.Node节点部署</a></td>
+            <td><a href="kubernetes/tree/master/1.11/docs/flannel部署.md">6.Flannel部署</a></td>
             <td><a href="docs/app.md">7.应用创建</a></td>
     </tr>
     <tr>

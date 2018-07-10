@@ -13,7 +13,7 @@
 
 
     安装部署：
-        <a hrep="https://github.com/haozi4263/kubernetes/blob/master/kubernetes/1.11/doc/%E7%B3%BB%E7%BB%9F%E5%88%9D%E5%A7%8B%E5%8C%96.md">1.系统初始化</a>
+        [1.](https://github.com/haozi4263/kubernetes/blob/master/kubernetes/1.11/doc/%E7%B3%BB%E7%BB%9F%E5%88%9D%E5%A7%8B%E5%8C%96.md") 1.系统初始化
         2.CA证书制作
         3.ETCD集群部署
         4.Master节点部署

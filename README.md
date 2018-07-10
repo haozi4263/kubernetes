@@ -1,4 +1,4 @@
-使用全手工方式安装最新版kubernetes1.11
+## 使用全手工方式安装最新版kubernetes1.11
 
     高可用安装3个master节点，使用使用lvs做负载均衡提升性能。
 
@@ -12,11 +12,25 @@
         192.168.10.160  node02
 
 
-    安装部署：
-        <a hrep="https://github.com/haozi4263/kubernetes/blob/master/kubernetes/1.11/doc/%E7%B3%BB%E7%BB%9F%E5%88%9D%E5%A7%8B%E5%8C%96.md">1.系统初始化</a>
-        2.CA证书制作
-        3.ETCD集群部署
-        4.Master节点部署
-        5.keepalive+haproxyHA部署
-        6.Node节点部署
-        7.flannel网络部署
+    #安装部署：
+
+
+     <table border="0">
+        <tr>
+            <td><strong>手动部署</strong></td>
+            <td><a href="kubernetes/1.11/docs/系统初始化.md">1.系统初始化</a></td>
+            <td><a href="kubernetes/1.11/docs/CA证书制作.md">2.CA证书制作</a></td>
+            <td><a href="kubernetes/1.11/docs/ETCD集群部署.md">3.ETCD集群部署</a></td>
+            <td><a href="kubernetes/1.11/docs/Master节点部署.md">4.Master节点部署</a></td>
+            <td><a href="kubernetes/1.11/docs/Node节点部署.md">5.Node节点部署</a></td>
+            <td><a href="kubernetes/1.11/docs/flannel部署.md">6.Flannel部署</a></td>
+            <td><a href="docs/app.md">7.应用创建</a></td>
+        </tr>
+        <tr>
+            <td><strong>必备插件</strong></td>
+            <td><a href="docs/coredns.md">1.CoreDNS部署</a></td>
+            <td><a href="docs/dashboard.md">2.Dashboard部署</a></td>
+            <td><a href="docs/heapster.md">3.Heapster部署</a></td>
+        </tr>
+    </table>
+

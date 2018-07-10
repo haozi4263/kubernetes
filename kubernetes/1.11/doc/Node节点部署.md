@@ -1,10 +1,17 @@
 
-1.二进制包准备 将软件包从master02拷贝到node01/02上
+1.二进制包准备 将软件包从master拷贝到node01/02上
 
-     cd /usr/local/src/kubernetes/server/bin/
-     cp kubelet kube-proxy /opt/kubernetes/bin/
-     scp kubelet kube-proxy 192.168.10.105:/opt/kubernetes/bin/
-     scp kubelet kube-proxy 192.168.10.106:/opt/kubernetes/bin/
+    cd /usr/local/src/kubernetes/server/bin/
+    cp kubelet kube-proxy /opt/kubernetes/bin/
+    scp kubelet kube-proxy 192.168.10.105:/opt/kubernetes/bin/
+    scp kubelet kube-proxy 192.168.10.106:/opt/kubernetes/bin/
+
+    设置内核参数：
+        net.bridge.bridge-nf-call-ip6tables = 1
+        net.bridge.bridge-nf-call-iptables = 1
+        net.ipv4.ip_forward = 1
+        vm.swappiness=0
+
 2.创建角色绑定
 
     kubectl create clusterrolebinding kubelet-bootstrap --clusterrole=system:node-bootstrapper --user=kubelet-bootstrap

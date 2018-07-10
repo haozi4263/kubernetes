@@ -80,8 +80,8 @@
     # scp /usr/lib/systemd/system/flannel.service 192.168.10.105:/usr/lib/systemd/system/
     # scp /usr/lib/systemd/system/flannel.service 192.168.10.106:/usr/lib/systemd/system/
 7.Flannel CNI集成
-    下载CNI插件
 
+    下载CNI插件：
     https://github.com/containernetworking/plugins/releases
     wget https://github.com/containernetworking/plugins/releases/download/v0.7.1/cni-plugins-amd64-v0.7.1.tgz
     mkdir /opt/kubernetes/bin/cni

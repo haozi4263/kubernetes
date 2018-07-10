@@ -116,7 +116,7 @@ keepalived配置文件三台主机基本一样，除了state，主节点配置�
             server master02 192.168.10.101:6443  check
             server master03 192.168.10.102:6443  check
 
-http://192.168.10.102:8888/haproxy?stats  haproxy状态查看。
+    http://192.168.10.102:8888/haproxy?stats  haproxy状态查看。
 
 4.测试：依次在master01上停止haproxy检测vip是否会绑定到master02/03
 

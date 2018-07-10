@@ -28,7 +28,7 @@
     </tr>
     <tr>
             <td><strong>必备插件</strong></td>
-            <td><a href="doc/coredns.md">1.CoreDNS部署</a></td>
+            <td><a href="doc/CoreDNS.md">1.CoreDNS部署</a></td>
             <td><a href="doc/dashboard.md">2.Dashboard部署</a></td>
             <td><a href="doc/heapster.md">3.Heapster部署</a></td>
     </tr>
@@ -44,4 +44,4 @@
 - [Node节点部署](kubernetes/1.11/doc/Node节点部署.md)
 - [Flannel网络部署](kubernetes/1.11/doc/flannel部署.md)
 - [创建第一个K8S应用](kubernetes/1.11/doc/app.md)
-- [CoreDNS和Dashboard部署](kubernetes/1.11/doc/dashboard.md)
+- [CoreDNS和Dashboard部署](kubernetes/1.11/doc/CoreDNS.md)

@@ -226,3 +226,30 @@
     NAME            STATUS    ROLES     AGE       VERSION
     192.168.10.105   Ready     <none>    22m       v1.11.0
     192.168.10.106   Ready     <none>    3m        v1.11.0
+
+
+注意：kube-proxy节点ipvs内核如果是3.10启动后会出现如下报错：
+    Jul 09 23:22:16 node02 kube-proxy[109043]: E0709 23:22:16.085988  109043 ipset.go:156] Failed to make sure
+    ip set: &{{KUBE-LOAD-BALANCER-LOCAL hash:ip,port inet 1024 65536 0-65535 Kubernetes service load balancer ip
+    + port with externalTrafficPolicy=local} map[] 0xc4203aae20} exist, error: error creating ipset
+    KUBE-LOAD-BALANCER-LOCAL, error: exit status 2
+解决办法：
+    升级kube-proxy节点的内核版本到4.17.5-1.el7.elrepo.x86_64
+
+    升级内核需要先导入elrepo的key，然后安装elrepo的yum源
+        rpm -Uvh http://www.elrepo.org/elrepo-release-7.0-2.el7.elrepo.noarch.rpm
+    查看：
+        yum --disablerepo="*" --enablerepo="elrepo-kernel" list available
+    上图可以看出，长期维护版本lt为4.4，最新主线稳定版ml为4.12，我们需要安装最新的主线稳定内核，使用如下命令：(以后这台机器升级内核直接运行这句就可升级为最新稳定版)
+        yum -y --enablerepo=elrepo-kernel install kernel-ml.x86_64 kernel-ml-devel.x86_64
+        
+    修改grub中默认的内核版本:
+    内核升级完毕后，目前内核还是默认的版本，如果此时直接执行reboot命令，重启后使用的内核版本还是默认的3.10，不会使用新的4.12.4，首先，我们可以通过命令查看默认启动顺序：
+    awk -F\' '$1=="menuentry " {print $2}' /etc/grub2.cfg
+    CentOS Linux (4.12.4-1.el7.elrepo.x86_64) 7 (Core)
+    CentOS Linux (3.10.0-514.el7.x86_64) 7 (Core)
+    CentOS Linux (0-rescue-a43cc2091b4557f1fd10a52ccffa5db2) 7 (Core）
+
+    vim /etc/default/grub
+        GRUB_DEFAULT=0
+    重启服务器即可

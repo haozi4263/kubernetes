@@ -18,7 +18,9 @@ spec:
       restartPolicy: Always
       serviceAccountName: ingress
       containers:
-      - image: registry.cn-beijing.aliyuncs.com/icsoc/traefik:v9
+#      - image: registry.cn-beijing.aliyuncs.com/icsoc/traefik:v9
+      - image: registry.cn-beijing.aliyuncs.com/icsoc/traefik:1.6.4
+
 #      - image: traefik
         name: traefik-ingress-lb
         resources:

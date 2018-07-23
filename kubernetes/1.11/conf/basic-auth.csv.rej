@@ -1,0 +1,4 @@
+diff a/kubernetes/1.11/conf/basic-auth.csv b/kubernetes/1.11/conf/basic-auth.csv	(rejected hunks)
+@@ -0,0 +1,2 @@
++admin,admin,1
++readonly,readonly,2

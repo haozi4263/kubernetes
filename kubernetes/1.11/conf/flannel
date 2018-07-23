@@ -1,0 +1,5 @@
+FLANNEL_ETCD="-etcd-endpoints=https://192.168.10.100:2379,https://192.168.10.101:2379,https://192.168.10.102:2379"
+FLANNEL_ETCD_KEY="-etcd-prefix=/kubernetes/network"
+FLANNEL_ETCD_CAFILE="--etcd-cafile=/opt/kubernetes/ssl/ca.pem"
+FLANNEL_ETCD_CERTFILE="--etcd-certfile=/opt/kubernetes/ssl/flanneld.pem"
+FLANNEL_ETCD_KEYFILE="--etcd-keyfile=/opt/kubernetes/ssl/flanneld-key.pem"

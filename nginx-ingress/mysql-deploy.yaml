@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: mysql
+spec:
+  replicas: 1
+  selector:
+    app: mysql
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+      - name: mysql
+        image: mysql
+        ports:
+        - containerPort: 3306
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: "123456"
+
+
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql
+#  namespace: kube-system
+#  annotations:
+#    traefik.frontend.rule.type: pathprefixstrip
+#    traefik.ingress.kubernetes.io/load-balancer-method: drr
+#    traefik.ingress.kubernetes.io/max-conn-amount: 1
+  labels:
+    app: mysql
+spec:
+  ports:
+  - name: mysql
+    port: 3306
+    targetPort: 3306
+  selector:
+    app: mysql

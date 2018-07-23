@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: custom-headers
+  namespace: ingress-nginx
+data:
+  X-Full-Uri: "https://$host$request_uri"
+  X-Forwarded-Proto: "$scheme"
+  X-Custom-Header: "mucang"
+  X-Custom-Mucang: "Beijing"

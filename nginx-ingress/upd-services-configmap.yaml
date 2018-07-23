@@ -1,0 +1,11 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: udp-services
+  namespace: ingress-nginx
+data:
+  2200: "default/gitlab:22"
+  3306: "kube-public/mysql:3306"
+  3306: "default/mysql:3306"
+  2202: "kube-public/centos:22"
+  2203: "kube-public/mongodb:27017"

@@ -1,59 +1,103 @@
 #!/bin/bash
+pod_name=$2
+ns=$3
 
 
-if [ "$1" == "sh" ]
-  then
-    #登录sh
-    pod_name=$2
-    release=$3
-        kubectl -n $3 exec -it -c redisdb `kubectl -n $3 get pod |grep -m 1 $2|grep Running|awk '{print $1}'` /bin/bash
-#    else
-#        echo "sh pod name | all"
-    exit 0
-fi
+kube_sh() {
+    kubectl -n $ns exec -it  `kubectl -n $ns get pod |grep  $pod_name|grep -m 1  Running|awk '{print $1}'` /bin/bash
+} 
 
+kube_save() {
+    kubectl -n $ns logs  `kubectl -n $ns get pod |grep  $pod_name|grep -m 1  Running|awk '{print $1}'` > ./$pod_name`date +%m%d-%H:%M:%S.html`
+    ls $pod_name`date +%m%d-%H:%M:%S.html`
+}
 
-if [ "$1" == "save" ]
- then
-    #保存应用日志
-    pod_name=$2
-    namespace=$3
-    since-time=$4
-    instance=$5
-        #kubectl -n $3 logs --since-time=$4+08:00  `kubectl -n $3 get pod |grep -m 1 $2|grep Running|awk '{print $1}'` > /home/im-logs/$2-$3-$4.html
-        kubectl -n $3 logs --since-time=$4+08:00  `kubectl -n $3 get pod |egrep "$2"|sed -n "$5p"|awk '{print $1}'` > /home/im-logs/$2-$5-$3-$4.html
-    exit 0
-fi
+kube_log() {
+    kubectl -n $ns logs -f --tail 20 `kubectl -n $ns get pod |grep  $pod_name|grep -m 1 Running|awk '{print $1}'`
+}
 
-if [ "$1" == "log" ]
-  then
-    #实时查看最新20条容器日志
-    pod_name=$2
-    release=$3
-        kubectl -n $3 logs -f --tail 20 `kubectl -n $3 get pod |grep -m 1 $2|grep Running|awk '{print $1}'`
-    exit 0
-fi
+kube_logs() {
+    kubectl -n $ns logs -f  `kubectl -n $ns get pod |grep -m 1 $pod_name|grep Running|awk '{print $1}'`
+}
 
-if [ "$1" == "logs" ]
-  then
-    #实时查看所有
-    pod_name=$2
-    release=$3
-        kubectl -n $3 logs -f  `kubectl -n $3 get pod |grep -m 1 $2|grep Running|awk '{print $1}'`
-    exit 0
-fi
+kube_get() {
+    clear
+    service=${#pod_name}
 
+    if [ "$service" -gt 3 ]; then
+    	kubectl get pod  -n $ns |egrep -v "Terminating|Evicted"|grep $pod_name
+    	echo -e "你是否准备执行查看日志,命令如下:"
+    	echo -e "\033[40;34mkube log $pod_name $ns \033[0m"
+        shift
+    fi
+    if [ "$service" -eq 3 ]; then
+    	kubectl get pod  -n $ns 
+        kubectl get pod  -n $ns |egrep -v "Terminating|Evicted"|grep $pod_name
+        echo -e "你是否准备执行查看日志,命令如下:"
+        echo -e "\033[40;34mkube log $pod_name $ns \033[0m"
+        shift
+    fi
+}
 
-if [ "$1" == "-h" ] || [ "$1" == "-help" ]
-  then
+kube_clear() {
+    for namespaces in im-dev im-test bi-dev bi-test paas-dev paas-test cloud-dev cloud-test cloud400-dev cloud400-test
+    do
+        echo "$(date "+%Y-%m-%d") $(date "+%H-%M-%S") start clear $namespaces  不正常pod" 
+        kubectl get pod -n  $namespaces |egrep "Evicted|Terminating"|awk  '{print $1}' |xargs kubectl delete pod -n $namespaces --force --grace-period=0
+    done
+}
+
+kube_help() {
     echo " log:  实时查看所选最新20条容器日志"
     echo " logs: 实时查看所选所有容器日志"
     echo " save: 保存所选容器日志到当前目录 "
     echo " sh:   登录到所选容器 "
-    echo " 例子: sudo kube sh im-xx dev-->登录到im-db开发环容器中 (参数：sh--执行命令  im-db--容器名 dev/test 环境) "
-    echo " 例子: sudo kube save im-xx test-->保存im-xx所有日志测试环境到当前目录"
+    echo "get:   查看运行容器"
+    echo "clear: 清楚退出和不正常pod"
+    echo " 例子: sudo kube sh db dev-->登录到db开发环容器中 (参数：sh--执行命令  db--容器名 dev/test 环境) "
+    echo " 例子: sudo kube save cs test-->保存cs所有日志测试环境到当前目录"
+    echo " 例子：sudo kube get im-cs im-test -->查看im-cs的pod"
+    echo -e "\033[40;34m 例子:sudo kube get all im-dev 查看im-dev所有pod\033[0m"
     exit 0
-fi
+}
 
+kube_cmd() {
+   while [[ $# -gt 0 ]]
+   do
+   cmd="$1"
+   case $cmd in
+      log)
+      kube_log
+      shift
+      ;;
+      sh)
+      kube_sh
+      shift
+      ;;
+      logs)
+      kube_logs
+      shift
+      ;;
+      get)
+      kube_get
+      shift
+      ;;
+      save)
+      kube_save
+      shift
+      ;;
+      clear)
+      kube_clear
+      shift
+      ;;
+      -h)
+      kube_help
+      shift
+      ;;
+   esac
+   shift
+   done
+}
+kube_cmd $1 $2 $3
 
-
+kubectl $*

@@ -7,10 +7,10 @@ metadata:
     claimName: prometheus-pv
 spec:
   capacity:
-    storage: 8Gi
+    storage: 150Gi
   accessModes:
     - ReadWriteMany
   nfs:
     # FIXME: use the right IP
     server: 192.168.165.63
-    path: "/data/prometheus"
+    path: "/data2/prometheus"

@@ -108,6 +108,7 @@
     kubectl get csr
     NAME                                                   AGE       REQUESTOR           CONDITION
     node-csr-0_w5F1FM_la_SeGiu3Y5xELRpYUjjT2icIFk9gO9KOU   1m        kubelet-bootstrap   Pending
+    删除不正常csr: kubectl delete csr --all
 7.批准kubelet 的 TLS 证书请求
 
     kubectl get csr|grep 'Pending' | awk 'NR>0{print $1}'| xargs kubectl certificate approve

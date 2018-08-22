@@ -47,7 +47,7 @@
 5.配置Flannel
 
     vim /opt/kubernetes/cfg/flannel
-    FLANNEL_ETCD="-etcd-endpoints=https://192.168.10.100:2379,https://192.168.10.102:2379,https://192.168.10.102:2379"
+    FLANNEL_ETCD="-etcd-endpoints=https://192.168.10.100:2379,https://192.168.10.101:2379,https://192.168.10.102:2379"
     FLANNEL_ETCD_KEY="-etcd-prefix=/kubernetes/network"
     FLANNEL_ETCD_CAFILE="--etcd-cafile=/opt/kubernetes/ssl/ca.pem"
     FLANNEL_ETCD_CERTFILE="--etcd-certfile=/opt/kubernetes/ssl/flanneld.pem"
@@ -79,7 +79,7 @@
     复制系统服务脚本到其它节点上
     # scp /usr/lib/systemd/system/flannel.service 192.168.10.105:/usr/lib/systemd/system/
     # scp /usr/lib/systemd/system/flannel.service 192.168.10.106:/usr/lib/systemd/system/
-7.Flannel CNI集成
+7.Flannel CNI集成(注意：需要先启动docker,然后启动flannel)
 
     下载CNI插件：
     https://github.com/containernetworking/plugins/releases

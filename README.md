@@ -24,7 +24,9 @@
             <td><a href="kubernetes/1.11/doc/Master节点部署.md">4.Master节点部署</a></td>
             <td><a href="kubernetes/1.11/doc/Node节点部署.md">5.Node节点部署</a></td>
             <td><a href="kubernetes/1.11/doc/flannel部署.md">6.Flannel部署</a></td>
-            <td><a href="doc/app.md">7.应用创建</a></td>
+            <td><a href="kubernetes/1.11/doc/metrics-serverHPA部署.md">7.metrics-serverHPA部署</a></td>
+            <td><a href="kubernetes/1.11/doc/kube-router部署.md">8.kube-router部署</a></td>
+            <td><a href="doc/app.md">9.应用创建</a></td>
     </tr>
     <tr>
             <td><strong>必备插件</strong></td>
@@ -45,3 +47,5 @@
 - [Flannel网络部署](kubernetes/1.11/doc/flannel部署.md)
 - [创建第一个K8S应用](kubernetes/1.11/doc/app.md)
 - [CoreDNS和Dashboard部署](kubernetes/1.11/doc/CoreDNS.md)
+- [metrics-serverHPA部署](kubernetes/1.11/doc/metrics-serverHPA部署.md)
+- [kube-router部署](kubernetes/1.11/doc/kube-router部署.md)
